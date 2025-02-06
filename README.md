@@ -16,7 +16,6 @@ The solution consists of the following projects:
 - **Entity Framework Core**
 - **Redis (for caching)**
 - **AutoMapper**
-- **Dependency Injection**
 - **Swagger (API Documentation)**
 
 ## Getting Started
