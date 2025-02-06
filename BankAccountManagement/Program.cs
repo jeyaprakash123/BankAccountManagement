@@ -33,7 +33,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = "localhost:6379";
-    options.InstanceName = "bankAppCache";
+    options.InstanceName = "BankAppCache";
 });
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
