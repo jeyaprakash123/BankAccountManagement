@@ -22,20 +22,20 @@ namespace BankAccountManagement.API.Controllers
         [HttpGet("get-user-by-id")]
         public async Task<ActionResult<User>> GetById([FromQuery] int id)
         {
-            string cacheKey = $"_{id}";
+            string cacheKey = $"user_{id}";
             var cacheResult = await _redisCacheService.GetDataAsync<UserDTO>(cacheKey);
-            if (cacheResult != null)
+            UserDTO user = null;
+            if (cacheResult is null)
             {
-                return Ok(cacheResult);
+                user = await _userService.GetById(id);
+                if (user is null)
+                {
+                    return NotFound(new { Message = "User Not found" });
+                }
+                await _redisCacheService.SendDataAsync<UserDTO>(cacheKey, user, TimeSpan.FromMinutes(10));
             }
-
-            var user = await _userService.GetById(id);
-            if (user is null)
-            {
-                return NotFound(new { Message = "User Not found" });
-            }
-            await _redisCacheService.SendDataAsync<UserDTO>(cacheKey, user, TimeSpan.FromMinutes(10));
-            return Ok(user);
+            var userData = cacheResult ?? user;
+            return Ok(userData);
         }
 
         [HttpPost("add-user")]
